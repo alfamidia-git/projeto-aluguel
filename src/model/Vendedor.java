@@ -9,7 +9,7 @@ public class Vendedor extends Pessoa{
 	private Double salario;
 	
 	public Vendedor(String nome, String cpf, String senha) {
-		super(Contador.proximoId(), nome, cpf, senha);
+		super(nome, cpf, senha);
 		totalVendas = 0.0;
 		salario = 2000.0;
 	}

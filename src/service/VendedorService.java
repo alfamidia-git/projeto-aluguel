@@ -1,5 +1,7 @@
 package service;
 
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
 import exceptions.ClienteException;
@@ -8,35 +10,27 @@ import model.Veiculo;
 import model.Vendedor;
 import model.Veiculo.Tipo;
 import repository.RepositoryImpl;
+import repository.VendedorRepository;
 import util.Contador;
 
 public class VendedorService {
 	
-	private RepositoryImpl<Integer, Vendedor> repository = new RepositoryImpl<>();
+	private VendedorRepository repository = new VendedorRepository();
 	private Scanner sc;
 	
 	public VendedorService(Scanner sc) {
 		this.sc = sc;
-		
-		Vendedor vendedor1 = new Vendedor( "José", "78945612", "1111");
-		Vendedor vendedor2 = new Vendedor("Maria", "545721458", "2222");
-		Vendedor vendedor3 = new Vendedor("Joao", "9454201231", "3333");
-		Vendedor vendedor4 = new Vendedor("Ana", "51068454555", "4444");
-		repository.salvar(vendedor1.getId(), vendedor1);
-		repository.salvar(vendedor2.getId(), vendedor2);
-		repository.salvar(vendedor3.getId(), vendedor3);
-		repository.salvar(vendedor4.getId(), vendedor4);
 	}
 	
-	public void mostrarTodos() {
-		for(Vendedor vendedor : repository.buscarTodos()) {
-			System.out.println(vendedor.getId() + " - " + vendedor.getNome());
-		}
+	public void mostrarTodos() throws SQLException {
 		
+		List<Vendedor> vendedores = repository.buscarTodos();
+		
+		vendedores.forEach(v -> System.out.println(v.getId() + " - " + v.getNome()));
 	}
 	
-	public Vendedor buscarVendedorPorId(Integer id) {
-		Vendedor vendedor = repository.buscaPorId(id);
+	public Vendedor buscarVendedorPorId(Integer id) throws SQLException {
+		Vendedor vendedor = repository.buscarPorID(id).get(0);
 		if(vendedor == null) {
 			throw new VendedorException("Vendedor não encontrado!");
 		}
@@ -44,11 +38,11 @@ public class VendedorService {
 		return vendedor;
 	}
 
-	public Vendedor login() {		
+	public Vendedor login() throws SQLException {		
 		System.out.println("Digite uma opção: ");
 		this.mostrarTodos();
 		Integer id = sc.nextInt();
-		Vendedor vendedor = this.repository.buscaPorId(id);
+		Vendedor vendedor = this.repository.buscarPorID(id).get(0);
 		
 		boolean continua = true;
 		Integer chance = 3;
@@ -69,7 +63,7 @@ public class VendedorService {
 		return vendedor;
 	}
 
-	public void cadastrarVendedor() {
+	public void cadastrarVendedor() throws SQLException {
 		sc.nextLine();
 		
 		System.out.println("Digite o nome do vendedor");
@@ -81,17 +75,17 @@ public class VendedorService {
 		
 		Vendedor vendedor = new Vendedor(nome, cpf, senha);
 		
-		repository.salvar(vendedor.getId(), vendedor);		
+		repository.salvar(vendedor);		
 	}
 	
-	public void cadastrarVenda(Integer id, Double valorVenda) {
-		Vendedor vendedor = this.repository.buscaPorId(id);
+	public void cadastrarVenda(Integer id, Double valorVenda) throws SQLException {
+		Vendedor vendedor = this.repository.buscarPorID(id).get(0);
 		vendedor.setTotalVendas(vendedor.getTotalVendas() + valorVenda);
-		this.repository.salvar(vendedor.getId(), vendedor);
+		this.repository.salvar(vendedor);
 	}
 
-	public void mostrarSalario(Integer id) {
-		Vendedor vendedor = this.repository.buscaPorId(id);
+	public void mostrarSalario(Integer id) throws SQLException {
+		Vendedor vendedor = this.repository.buscarPorID(id).get(0);
 		
 		System.out.println("Seu salário base: " + vendedor.getSalario());
 		

@@ -23,11 +23,11 @@ public class Veiculo {
 	private Double valor;
 	private Status status;
 	private Tipo tipo;
-	private Cliente cliente;
 	
-	
+	public Veiculo() {
+		
+	}
 	public Veiculo(String placa, String modelo, String marca, String cor, Double valor, Tipo tipo) {
-		this.id = Contador.proximoId();
 		this.status = Status.LIVRE;
 		this.placa = placa;
 		this.modelo = modelo;
@@ -85,21 +85,11 @@ public class Veiculo {
 	public void setTipo(Tipo tipo) {
 		this.tipo = tipo;
 	}
-	
-	
-
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
 
 	@Override
 	public String toString() {
-		return "Veiculo [id=" + id + ", placa=" + placa + ", modelo=" + modelo + ", marca=" + marca + ", cor=" + cor
-				+ ", valor=" + valor + ", status=" + status + ", tipo=" + tipo + "]";
+		return this.id + " - " + this.marca + ", " + this.modelo + ", " + cor
+				+ ", R$" + valor;
 	}
 	
 }

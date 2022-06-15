@@ -5,6 +5,7 @@ import service.VeiculoService;
 import service.VendedorService;
 import util.Menu;
 
+import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -56,9 +57,8 @@ public class Principal {
 					Vendedor vendedor = vendedorService.buscarVendedorPorId(opcaoVendedor);
 					aluguelService.salvar(cliente, vendedor, veiculo);
 					veiculo.setStatus(Status.ALUGADO);
-					veiculo.setCliente(cliente);
 					veiculoService.atualizarVeiculo(veiculo);
-					cliente.getVeiculos().add(veiculo);
+
 					clienteService.atualizarCliente(cliente);
 					vendedorService.cadastrarVenda(vendedor.getId(), veiculo.getValor());
 				} else if (opcao == 2) {
@@ -66,11 +66,9 @@ public class Principal {
 					 clienteService.mostrarVeiculosAlugados(cliente.getId());
 					 int opcaoVeiculo = sc.nextInt();
 					 Veiculo veiculo = veiculoService.buscarPorId(opcaoVeiculo);
-					 cliente.getVeiculos().remove(veiculo);
 					 veiculo.setStatus(Status.LIVRE);
-					 veiculo.setCliente(null);
 					 veiculoService.atualizarVeiculo(veiculo);
-					 clienteService.atualizarCliente(cliente);
+					 aluguelService.excluirAlguelPorVeiculoID(veiculo.getId());
 					 
 				}
 			} else if (identificacao == 2) {
@@ -92,7 +90,7 @@ public class Principal {
 				} else if (opcao == 2) {
 					vendedorService.cadastrarVendedor();
 				}else if(opcao == 3) {
-					aluguelService.mostrarTotalVendas();
+				//	aluguelService.mostrarTotalVendas();
 				}
 			} else if (identificacao == 0) {
 				continua = false;
@@ -107,7 +105,11 @@ public class Principal {
 				System.out.println(e.getMessage());
 			}catch(VeiculoException e) {
 				System.out.println(e.getMessage());
-			}finally {
+			}
+			catch(SQLException e) {
+				System.out.println(e.getMessage());
+			}
+			finally {
 				Thread.sleep(2000);
 				sc.nextLine();
 			}

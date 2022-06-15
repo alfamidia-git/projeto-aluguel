@@ -1,5 +1,6 @@
 package service;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -9,25 +10,18 @@ import model.Veiculo;
 import model.Veiculo.Status;
 import model.Veiculo.Tipo;
 import repository.RepositoryImpl;
+import repository.VeiculoRepository;
 import util.Contador;
 
 public class VeiculoService {
 	
-	private RepositoryImpl<Integer, Veiculo> repository = new RepositoryImpl<>();
+	private VeiculoRepository repository = new VeiculoRepository();
 	private Scanner sc;
 	
 	public VeiculoService(Scanner sc) {
 		this.sc = sc;
-		Veiculo veiculo1 = new Veiculo("IPO2525", "HB20", "Hyndai", "Preto", 200000.0, Tipo.CARRO);
-		Veiculo veiculo2 = new Veiculo("IPO2526", "I30", "Hyndai", "Preto", 200000.0, Tipo.CARRO);
-		Veiculo veiculo3 = new Veiculo("IPO2527", "A3", "Audi", "Preto", 200000.0, Tipo.CARRO);
-		Veiculo veiculo4 = new Veiculo("IPO2528", "CG", "Honda", "Preto", 200000.0, Tipo.CARRO);
-		repository.salvar(veiculo1.getId(), veiculo1);
-		repository.salvar(veiculo2.getId(), veiculo2);
-		repository.salvar(veiculo3.getId(), veiculo3);
-		repository.salvar(veiculo4.getId(), veiculo4);
 	}
-	public void cadastrarVeiculo() {
+	public void cadastrarVeiculo() throws SQLException {
 		sc.nextLine();
 		
 		System.out.println("Digite o modelo do veículo");
@@ -54,28 +48,34 @@ public class VeiculoService {
 		
 		Veiculo veiculo = new Veiculo(placa, modelo, marca, cor, valor, tipo);
 		
-		repository.salvar(veiculo.getId(), veiculo);
+		repository.salvar(veiculo);
 	}
 	
-	public void mostrarTodos() {
-		for(Veiculo veiculo : repository.buscarTodos()) {
-			System.out.println(veiculo.getId() + " - " +  veiculo.getMarca() + ", " + veiculo.getModelo() + ", " + veiculo.getCor() + 
-					", R$" + veiculo.getValor());
-		}
+	public void mostrarTodos() throws SQLException {
+		
+		List<Veiculo> veiculos = repository.buscarTodos();
+		
+		veiculos.forEach(v -> System.out.println(v));
 		
 	}
 	
-	public void mostrarTodosLivres() {
-		for(Veiculo veiculo : repository.buscarTodos()) {
-			if(veiculo.getStatus() == Status.LIVRE) {
-				System.out.println(veiculo.getId() + " - " +  veiculo.getMarca() + ", " + veiculo.getModelo() + ", " + veiculo.getCor() + 
-						", R$" + veiculo.getValor());
-			}
-		}
+	public void mostrarTodosLivres() throws SQLException {
+//		for(Veiculo veiculo : repository.buscarTodos()) {
+//			if(veiculo.getStatus() == Status.LIVRE) {
+//				System.out.println(veiculo.getId() + " - " +  veiculo.getMarca() + ", " + veiculo.getModelo() + ", " + veiculo.getCor() + 
+//						", R$" + veiculo.getValor());
+//			}
+//		}
+		
+		List<Veiculo> veiculos = repository.buscarTodos();
+		
+		
+		veiculos.stream().filter(v -> v.getStatus() == Status.LIVRE)
+						 .forEach(v -> System.out.println(v));
 	}
 	
-	public Veiculo buscarPorId(Integer id) {
-		Veiculo veiculo = this.repository.buscaPorId(id);
+	public Veiculo buscarPorId(Integer id) throws SQLException {
+		Veiculo veiculo = this.repository.buscarPorID(id).get(0);
 		
 		if(veiculo == null) {
 			throw new VeiculoException("Veículo não encontrado. ID: " + id);
@@ -84,17 +84,20 @@ public class VeiculoService {
 		return veiculo;
 	}
 	
-	public void atualizarVeiculo(Veiculo veiculo) {
-		this.repository.salvar(veiculo.getId(), veiculo);
+	public void atualizarVeiculo(Veiculo veiculo) throws SQLException {
+		this.repository.atualizar(veiculo);
 	}
-	public void buscarVeiculosAlugados() {
+	public void buscarVeiculosAlugados() throws SQLException {
 		List<Veiculo> veiculos = this.repository.buscarTodos();	
 		
-		for(Veiculo veiculo : veiculos) {
-			if(veiculo.getStatus() == Status.ALUGADO) {
-				System.out.println("Cliente " + veiculo.getCliente().getNome() + " - " +  veiculo.getId() + " - " +  veiculo.getMarca() + ", " + veiculo.getModelo() + ", " + veiculo.getCor());
-			}
-		}
+//		for(Veiculo veiculo : veiculos) {
+//			if(veiculo.getStatus() == Status.ALUGADO) {
+//				System.out.println("Cliente " + veiculo.getCliente().getNome() + " - " +  veiculo.getId() + " - " +  veiculo.getMarca() + ", " + veiculo.getModelo() + ", " + veiculo.getCor());
+//			}
+//		}
+		
+		veiculos.stream().filter(v -> v.getStatus() == Status.ALUGADO)
+		.forEach(v -> System.out.println(v));
 	}
 }
 	

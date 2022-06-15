@@ -6,17 +6,17 @@ import util.Contador;
 
 public class Aluguel {
 		private Integer id;
-		private Veiculo veiculo;
-		private Cliente cliente;
-		private Vendedor vendedor;
+		private Integer idVeiculo;
+		private Integer idCliente;
+		private Integer idVendedor;
 		private LocalDate data;
 		
-		public Aluguel(Veiculo veiculo, Cliente cliente, Vendedor vendedor, LocalDate data) {
+		public Aluguel(Integer veiculo, Integer cliente, Integer vendedor) {
 			this.id = Contador.proximoId();
-			this.veiculo = veiculo;
-			this.cliente = cliente;
-			this.vendedor = vendedor;
-			this.data = data;
+			this.idVeiculo = veiculo;
+			this.idCliente = cliente;
+			this.idVendedor = vendedor;
+			this.data = LocalDate.now();
 		}
 
 		public Integer getId() {
@@ -27,36 +27,36 @@ public class Aluguel {
 			this.id = id;
 		}
 
-		public Veiculo getVeiculo() {
-			return veiculo;
-		}
-
-		public void setVeiculo(Veiculo veiculo) {
-			this.veiculo = veiculo;
-		}
-
-		public Cliente getCliente() {
-			return cliente;
-		}
-
-		public void setCliente(Cliente cliente) {
-			this.cliente = cliente;
-		}
-
-		public Vendedor getVendedor() {
-			return vendedor;
-		}
-
-		public void setVendedor(Vendedor vendedor) {
-			this.vendedor = vendedor;
-		}
-
 		public LocalDate getData() {
 			return data;
 		}
 
 		public void setData(LocalDate data) {
 			this.data = data;
+		}
+
+		public Integer getIdVeiculo() {
+			return idVeiculo;
+		}
+
+		public void setIdVeiculo(Integer idVeiculo) {
+			this.idVeiculo = idVeiculo;
+		}
+
+		public Integer getIdCliente() {
+			return idCliente;
+		}
+
+		public void setIdCliente(Integer idCliente) {
+			this.idCliente = idCliente;
+		}
+
+		public Integer getIdVendedor() {
+			return idVendedor;
+		}
+
+		public void setIdVendedor(Integer idVendedor) {
+			this.idVendedor = idVendedor;
 		}
 		
 			
